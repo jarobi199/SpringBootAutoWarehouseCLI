@@ -1,0 +1,5 @@
+package io.auto.enums;
+
+public enum ServiceType {
+    OIL_CHANGE , TIRE_SERVICE, BRAKE_SERVICE, ENGINE_REPAIR, BODYWORK, INSPECTION, DETAILING , OTHER
+}

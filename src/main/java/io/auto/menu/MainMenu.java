@@ -1,6 +1,5 @@
 package io.auto.menu;
 
-
 import io.auto.interfaces.IMenu;
 import io.auto.util.InputHandler;
 import org.springframework.beans.factory.annotation.Autowired;

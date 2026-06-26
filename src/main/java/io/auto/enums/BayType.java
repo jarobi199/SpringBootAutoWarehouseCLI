@@ -1,0 +1,5 @@
+package io.auto.enums;
+
+public enum BayType {
+    STANDARD, OVERSIZED, CLIMATE_CONTROLLED, SECURE_VAULT, OUTDOOR_COVERED , OTHER
+}

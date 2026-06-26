@@ -51,6 +51,7 @@ public class InputHandler {
                 // Skip blank lines and comment lines
                 if (trimmed.contains("--- TEST")) {
                     stepCounter++;
+                    continue;
                 }
                 if (trimmed.isEmpty() || trimmed.startsWith("#")) {
                     continue;
