@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface MaintenanceRepository extends MongoRepository<MaintenanceRecord, String> {
     List<MaintenanceRecord> findByVehicleId(String vehicleId);
-    List<MaintenanceRecord> findByUserIdOrderByServiceDateDesc(String userId);
+    List<MaintenanceRecord> findByVehicleIdOrderByServiceDateDesc(String userId);
 }

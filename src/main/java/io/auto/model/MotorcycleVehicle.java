@@ -1,5 +1,6 @@
 package io.auto.model;
 
+import io.auto.depreciation.LinearlDepreciationStrategy;
 import io.auto.enums.VehicleCondition;
 import io.auto.enums.VehicleType;
 
@@ -11,7 +12,7 @@ public class MotorcycleVehicle extends Vehicle {
     private long odometerKm;
 
     public MotorcycleVehicle() {
-        //No argument constructor
+       this.depreciationStrategy = new LinearlDepreciationStrategy();
     }
 
     public MotorcycleVehicle(String userId, String bayId, String make, String model, int year, String vin, double purchasePrice, LocalDate purchaseDate, LocalDate registrationExpiryDate, VehicleCondition condition, String notes, int engineCC, boolean hasSideCar, long odometerKm) {
@@ -52,6 +53,6 @@ public class MotorcycleVehicle extends Vehicle {
 
     @Override
     public double calculateDepreciatedValue() {
-        return 0;
+        return depreciationStrategy.calculate(purchasePrice, purchaseDate);
     }
 }

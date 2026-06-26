@@ -1,5 +1,6 @@
 package io.auto.model;
 
+import io.auto.depreciation.MileageDepreciationStrategy;
 import io.auto.enums.FuelType;
 import io.auto.enums.VehicleCondition;
 import io.auto.enums.VehicleType;
@@ -13,7 +14,7 @@ public class PassengerVehicle extends Vehicle {
     private boolean  isElectricOrHybrid;
 
     public PassengerVehicle() {
-        //No argument constructor
+        this.depreciationStrategy = new MileageDepreciationStrategy();
     }
 
     public PassengerVehicle(String userId, String bayId, String make, String model, int year, String vin, double purchasePrice, LocalDate purchaseDate, LocalDate registrationExpiryDate, VehicleCondition condition, String notes, long odometerKm, boolean isElectricOrHybrid, int numberOfSeats, FuelType fuelType) {
@@ -61,9 +62,10 @@ public class PassengerVehicle extends Vehicle {
        return VehicleType.PASSENGER;
     }
 
-    @Override
     public double calculateDepreciatedValue() {
-        return 0;
+        double ageAdjusted = depreciationStrategy.calculate(purchasePrice, purchaseDate);
+        double mileagePenalty = purchasePrice * 0.00001 * odometerKm;
+        return Math.max(purchasePrice * 0.15, ageAdjusted - mileagePenalty);
     }
 
 }

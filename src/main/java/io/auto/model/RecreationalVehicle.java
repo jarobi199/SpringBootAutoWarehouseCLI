@@ -1,5 +1,6 @@
 package io.auto.model;
 
+import io.auto.depreciation.SeasonalDepreciationStrategy;
 import io.auto.enums.RvType;
 import io.auto.enums.VehicleCondition;
 import io.auto.enums.VehicleType;
@@ -15,7 +16,7 @@ public class RecreationalVehicle extends Vehicle {
     private List<SeasonalRecord> usageLogs;
 
     public RecreationalVehicle() {
-        //No argument constructor
+        this.depreciationStrategy = new SeasonalDepreciationStrategy();
     }
 
     public RecreationalVehicle(String userId, String bayId, String make, String model, int year, String vin, double purchasePrice, LocalDate purchaseDate, LocalDate registrationExpiryDate, VehicleCondition condition, String notes, boolean requiresTrailer, String storageNotes, RvType rvType) {
@@ -65,6 +66,6 @@ public class RecreationalVehicle extends Vehicle {
 
     @Override
     public double calculateDepreciatedValue() {
-        return 0;
+       return depreciationStrategy.calculate(purchasePrice, purchaseDate);
     }
 }
