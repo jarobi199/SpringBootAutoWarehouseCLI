@@ -139,6 +139,10 @@ public abstract class Vehicle {
         this.notes = notes;
     }
 
+    public String getVehicleDisplay() {
+        return year + " " + make + " " + model;
+    }
+
     public abstract VehicleType getVehicleType();
 
     public abstract double calculateDepreciatedValue();
