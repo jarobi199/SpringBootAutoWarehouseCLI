@@ -83,6 +83,6 @@ public class Bay {
     }
 
     public String getDisplay() {
-        return "Bay #" + bayNumber + " - " + name + " (" + bayType.name() + ")";
+        return  name + " (" + bayType.name() + ")";
     }
 }
