@@ -81,4 +81,8 @@ public class Bay {
     public void setNotes(String notes) {
         this.notes = notes;
     }
+
+    public String getDisplay() {
+        return "Bay #" + bayNumber + " - " + name + " (" + bayType.name() + ")";
+    }
 }
