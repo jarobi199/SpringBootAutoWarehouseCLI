@@ -1,6 +1,7 @@
 package io.auto.menu;
 
 import io.auto.authentication.SessionContext;
+import io.auto.enums.BayType;
 import io.auto.interfaces.IMenu;
 import io.auto.model.Bay;
 import io.auto.service.BayService;
@@ -35,21 +36,55 @@ public class BayMenu implements IMenu {
     }
 
     public void deleteBay() {
+        Bay bay = listBaysAndSelect();
+        if ((bay != null)  && (!bay.isOccupied())) {
+            bayService.deleteBay(bay);
+            System.out.println("Bay has been deleted!");
+        }
+        else
+        {
+            System.out.println("There are no bays created or the selected bay is occupied.");
+        }
     }
 
     public void editBay() {
+        Bay bay = listBaysAndSelect();
+        if (bay != null) {
+            System.out.println("Enter the new bay name");
+            String name = InputHandler.getStringInput();
+            System.out.println("Enter the new bay type (STANDARD, OVERSIZED, CLIMATE_CONTROLLED, SECURE_VAULT, OUTDOOR_COVERED, OTHER):");
+            BayType bayType = BayType.valueOf(InputHandler.getStringInput().toUpperCase());
+            System.out.println("Enter the new bay notes:");
+            String notes = InputHandler.getStringInput();
+
+            bayService.updateBay(name, bayType, notes, bay);
+            System.out.println("Bay has been successfully updated!");
+        }
     }
 
     public void viewBayDetail() {
     }
 
     public void addBay() {
+        System.out.println("Enter the bay number:");
+        int bayNumber = InputHandler.getIntegerInput();
+        System.out.println("Enter the name:");
+        String name = InputHandler.getStringInput();
+        System.out.println("Enter the bay type (STANDARD, OVERSIZED, CLIMATE_CONTROLLED, SECURE_VAULT, OUTDOOR_COVERED, OTHER):");
+        BayType bayType = BayType.valueOf(InputHandler.getStringInput().toUpperCase());
+        System.out.println("Enter the notes:");
+        String notes = InputHandler.getStringInput();
+
+        bayService.addBay(bayNumber, name, bayType, notes);
+        System.out.println("Bay has been added!");
     }
 
     public void listVacantBays() {
+        bayService.listAllVacantBays();
     }
 
     public void listAllBays() {
+        bayService.listAllBays();
     }
 
     @Override
@@ -65,13 +100,20 @@ public class BayMenu implements IMenu {
 
     public Bay listBaysAndSelect() {
         int number = 1;
-        List<Bay> availableBays = bayService.findBaysByUserIdAndIsOccupied(SessionContext.getUser().getId(), false);
-        for (Bay bay : availableBays) {
-            System.out.println("[" + number + "] " + bay.getDisplay());
-        }
-        int choice = InputHandler.getIntegerInput();
+        Bay bay = null;
+        int choice = 0;
 
-        return availableBays.get(choice - 1);
+        List<Bay> availableBays = bayService.findBaysByUserIdAndIsOccupied(SessionContext.getUser().getId(), false);
+        if (!availableBays.isEmpty()) {
+            for (Bay b : availableBays) {
+                System.out.println("[" + number + "] " + b.getDisplay());
+            }
+            System.out.println("Select a bay:");
+            choice = InputHandler.getIntegerInput();
+            bay = availableBays.get(choice - 1);
+        }
+
+        return bay;
     }
 
 }

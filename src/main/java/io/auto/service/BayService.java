@@ -1,7 +1,12 @@
 package io.auto.service;
 
+import io.auto.authentication.SessionContext;
+import io.auto.enums.BayType;
 import io.auto.model.Bay;
 import io.auto.repository.BayRepository;
+import io.github.kusoroadeolu.clique.Clique;
+import io.github.kusoroadeolu.clique.components.Table;
+import io.github.kusoroadeolu.clique.configuration.TableType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,4 +25,46 @@ public class BayService {
         return bayRepository.findByUserIdAndIsOccupied(userId, isOccupied);
     }
 
+    public void listAllBays() {
+        List<Bay> bays = bayRepository.findByUserId(SessionContext.getUser().getId());
+        displayBays(bays);
+    }
+
+    public void listAllVacantBays() {
+        List<Bay> bays = bayRepository.findByUserIdAndIsOccupied(SessionContext.getUser().getId(), false);
+        displayBays(bays);
+    }
+
+    public void displayBays(List<Bay> bays) {
+        Table table = Clique.table(TableType.BOX_DRAW)
+                .headers(
+                        "[*blue, bold]NUMBER[/]",
+                        "[*blue, bold]NAME[/]",
+                        "[*blue, bold]TYPE[/]",
+                        "[*blue, bold]TYPE[/]",
+                        "[*blue, bold]OCCUPANCY STATUS[/]",
+                        "[*blue, bold]NOTES[/]"
+                );
+        bays.forEach(bay -> {
+            table.row(String.valueOf(bay.getBayNumber()), bay.getName(), bay.getBayType().name(), bay.isOccupied() ? "OCCUPIED" : "VACANT", bay.getNotes());
+        });
+        System.out.println("| BAYS |");
+        table.render();
+    }
+
+    public void addBay(int bayNumber, String name, BayType bayType, String notes) {
+        Bay bay = new Bay(SessionContext.getUser().getId(), bayNumber, name, bayType, false, notes);
+        bayRepository.save(bay);
+    }
+
+    public void updateBay(String name, BayType bayType, String notes, Bay bay) {
+        bay.setName(name);
+        bay.setBayType(bayType);
+        bay.setNotes(notes);
+        bayRepository.save(bay);
+    }
+
+    public void deleteBay(Bay bay) {
+        bayRepository.delete(bay);
+    }
 }
