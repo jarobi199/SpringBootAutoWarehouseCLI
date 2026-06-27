@@ -37,9 +37,14 @@ public class BayMenu implements IMenu {
 
     public void deleteBay() {
         Bay bay = listBaysAndSelect();
+        System.out.println("Are you sure you want to delete this bay? (Y/N):");
+
         if ((bay != null)  && (!bay.isOccupied())) {
-            bayService.deleteBay(bay);
-            System.out.println("Bay has been deleted!");
+            String answer = InputHandler.getStringInput();
+            if ("Y".equalsIgnoreCase(answer)) {
+                bayService.deleteBay(bay);
+                System.out.println("Bay has been deleted!");
+            }
         }
         else
         {
@@ -63,6 +68,10 @@ public class BayMenu implements IMenu {
     }
 
     public void viewBayDetail() {
+        Bay bay = listBaysAndSelect();
+        if (bay != null) {
+            bayService.viewBayDetail(bay);
+        }
     }
 
     public void addBay() {
