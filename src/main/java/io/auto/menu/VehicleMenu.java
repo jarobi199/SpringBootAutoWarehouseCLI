@@ -8,7 +8,6 @@ import io.auto.enums.VehicleType;
 import io.auto.interfaces.IMenu;
 import io.auto.model.Bay;
 import io.auto.model.RecreationalVehicle;
-import io.auto.model.SeasonalRecord;
 import io.auto.model.Vehicle;
 import io.auto.service.VehicleService;
 import io.auto.util.InputHandler;
