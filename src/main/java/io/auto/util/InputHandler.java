@@ -113,7 +113,7 @@ public class InputHandler {
     }
 
     public static boolean getBooleanInput() {
-        return Boolean.parseBoolean(nextLine());
+        return "Y".equalsIgnoreCase(nextLine());
     }
 
     public static void closeInput() {

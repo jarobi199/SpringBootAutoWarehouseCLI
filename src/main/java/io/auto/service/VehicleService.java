@@ -1,8 +1,11 @@
 package io.auto.service;
 
 import io.auto.authentication.SessionContext;
-import io.auto.model.Bay;
-import io.auto.model.Vehicle;
+import io.auto.enums.FuelType;
+import io.auto.enums.RvType;
+import io.auto.enums.VehicleCondition;
+import io.auto.enums.VehicleType;
+import io.auto.model.*;
 import io.auto.repository.BayRepository;
 import io.auto.repository.VehicleRepository;
 import io.auto.util.InputHandler;
@@ -12,6 +15,7 @@ import io.github.kusoroadeolu.clique.configuration.TableType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,5 +52,25 @@ public class VehicleService {
             });
             table.render();
         }
+    }
+
+    public void addPassengerVehicle(VehicleType vehicleType, Bay bay, int year, String make, String model, String vin, double purchasePrice,
+                                    LocalDate purchaseDate, LocalDate registrationExpiryDate, VehicleCondition condition, String notes, long odometerKm, FuelType fuelType, int seats, boolean isElectricOrHybrid) {
+        PassengerVehicle passengerVehicle  = new PassengerVehicle(SessionContext.getUser().getId(), bay.getId(), make, model, year, vin, purchasePrice, purchaseDate, registrationExpiryDate, condition,
+                                                                                                    notes, odometerKm, isElectricOrHybrid, seats, fuelType);
+        vehicleRepository.save(passengerVehicle);
+    }
+
+    public void addMotorcycleVehicle(VehicleType vehicleType, Bay bay, int year, String make, String model, String vin, double purchasePrice, LocalDate purchaseDate, LocalDate registrationExpiryDate, VehicleCondition condition, String notes, int engineCC, boolean hasSideCar, long odometerKm) {
+        MotorcycleVehicle motorcycleVehicle = new MotorcycleVehicle(SessionContext.getUser().getId(), bay.getId(), make, model, year, vin, purchasePrice, purchaseDate, registrationExpiryDate, condition,
+                notes, engineCC, hasSideCar, odometerKm);
+        vehicleRepository.save(motorcycleVehicle);
+    }
+
+    public void addRecreationalVehicle(VehicleType vehicleType, Bay bay, int year, String make, String model, String vin, double purchasePrice, LocalDate purchaseDate,
+                                       LocalDate registrationExpiryDate, VehicleCondition condition, String notes, RvType rvType, String storageNotes, boolean requiresTrailer) {
+        RecreationalVehicle recreationalVehicle = new RecreationalVehicle(SessionContext.getUser().getId(), bay.getId(), make, model, year, vin, purchasePrice, purchaseDate, registrationExpiryDate, condition,
+                notes, requiresTrailer, storageNotes, rvType);
+        vehicleRepository.save(recreationalVehicle);
     }
 }
