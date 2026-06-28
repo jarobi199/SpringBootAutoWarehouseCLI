@@ -137,9 +137,7 @@ public class VehicleService {
                                 "[*blue, bold]HOURS USED[/]",
                                 "[*blue, bold]BAY NUMBER[/]",
                                 "[*blue, bold]NOTES[/]");
-                usageLogs.forEach(seasonalRecord -> {
-                    seasonalTable.row(seasonalRecord.season(), String.valueOf(seasonalRecord.hoursUsed()), String.valueOf(seasonalRecord.bayLocation()), seasonalRecord.notes());
-                });
+                usageLogs.forEach(seasonalRecord -> seasonalTable.row(seasonalRecord.season(), String.valueOf(seasonalRecord.hoursUsed()), String.valueOf(seasonalRecord.bayLocation()), seasonalRecord.notes()));
                 seasonalTable.render();
             }
             else
@@ -190,7 +188,7 @@ public class VehicleService {
                     );
             table.row(String.valueOf(motorcycleVehicle.getYear()), motorcycleVehicle.getMake(), motorcycleVehicle.getModel(), motorcycleVehicle.getVehicleType().name(),
                     (optionalBay.isPresent()) ? optionalBay.get().getName() : "", motorcycleVehicle.getCondition().name(), InputHandler.formatAsMoney(motorcycleVehicle.getPurchasePrice()),
-                    InputHandler.formatAsMoney(motorcycleVehicle.calculateDepreciatedValue()), String.valueOf(motorcycleVehicle.getOdometerKm()), passengerVehicle.getFuelType().name(), String.valueOf(passengerVehicle.getNumberOfSeats()));
+                    InputHandler.formatAsMoney(motorcycleVehicle.calculateDepreciatedValue()), String.valueOf(motorcycleVehicle.getEngineCC()), motorcycleVehicle.isHasSideCar() ? "YES" : "NO", String.valueOf(motorcycleVehicle.getOdometerKm()));
             table.render();
         }
 
