@@ -1,11 +1,17 @@
 package io.auto.menu;
 
 import io.auto.interfaces.IMenu;
+import io.auto.service.VehicleService;
 import io.auto.util.InputHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class VehicleMenu implements IMenu {
+
+    @Autowired
+    private VehicleService vehicleService;
+
     @Override
     public void show() {
         int choice;
@@ -30,9 +36,11 @@ public class VehicleMenu implements IMenu {
     }
 
     public void viewVehicleDetail() {
+
     }
 
     public void listAllVehicles() {
+        vehicleService.listAllVehicles();
     }
 
     public void addVehicle() {
