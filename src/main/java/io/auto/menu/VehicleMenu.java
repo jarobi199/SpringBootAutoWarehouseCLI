@@ -51,6 +51,7 @@ public class VehicleMenu implements IMenu {
         String answer = InputHandler.getStringInput();
         if ("Y".equalsIgnoreCase(answer)) {
             vehicleService.deleteVehicle(vehicle);
+            System.out.println("Vehicle has been deleted!");
         }
     }
 
