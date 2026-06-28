@@ -27,6 +27,10 @@ public class VehicleService {
     @Autowired
     private BayRepository bayRepository;
 
+    public List<Vehicle> findAllVehiclesByUserId(String userId) {
+        return vehicleRepository.findByUserId(userId);
+    }
+
     public void listAllVehicles() {
         List<Vehicle> vehicles = vehicleRepository.findByUserId(SessionContext.getUser().getId());
         if (vehicles.isEmpty()) {
@@ -54,23 +58,141 @@ public class VehicleService {
         }
     }
 
-    public void addPassengerVehicle(VehicleType vehicleType, Bay bay, int year, String make, String model, String vin, double purchasePrice,
+    public void addPassengerVehicle(Bay bay, int year, String make, String model, String vin, double purchasePrice,
                                     LocalDate purchaseDate, LocalDate registrationExpiryDate, VehicleCondition condition, String notes, long odometerKm, FuelType fuelType, int seats, boolean isElectricOrHybrid) {
         PassengerVehicle passengerVehicle  = new PassengerVehicle(SessionContext.getUser().getId(), bay.getId(), make, model, year, vin, purchasePrice, purchaseDate, registrationExpiryDate, condition,
                                                                                                     notes, odometerKm, isElectricOrHybrid, seats, fuelType);
         vehicleRepository.save(passengerVehicle);
     }
 
-    public void addMotorcycleVehicle(VehicleType vehicleType, Bay bay, int year, String make, String model, String vin, double purchasePrice, LocalDate purchaseDate, LocalDate registrationExpiryDate, VehicleCondition condition, String notes, int engineCC, boolean hasSideCar, long odometerKm) {
+    public void addMotorcycleVehicle(Bay bay, int year, String make, String model, String vin, double purchasePrice, LocalDate purchaseDate, LocalDate registrationExpiryDate, VehicleCondition condition, String notes, int engineCC, boolean hasSideCar, long odometerKm) {
         MotorcycleVehicle motorcycleVehicle = new MotorcycleVehicle(SessionContext.getUser().getId(), bay.getId(), make, model, year, vin, purchasePrice, purchaseDate, registrationExpiryDate, condition,
                 notes, engineCC, hasSideCar, odometerKm);
         vehicleRepository.save(motorcycleVehicle);
     }
 
-    public void addRecreationalVehicle(VehicleType vehicleType, Bay bay, int year, String make, String model, String vin, double purchasePrice, LocalDate purchaseDate,
+    public void addRecreationalVehicle(Bay bay, int year, String make, String model, String vin, double purchasePrice, LocalDate purchaseDate,
                                        LocalDate registrationExpiryDate, VehicleCondition condition, String notes, RvType rvType, String storageNotes, boolean requiresTrailer) {
         RecreationalVehicle recreationalVehicle = new RecreationalVehicle(SessionContext.getUser().getId(), bay.getId(), make, model, year, vin, purchasePrice, purchaseDate, registrationExpiryDate, condition,
                 notes, requiresTrailer, storageNotes, rvType);
+        bay.setOccupied(true);
+
         vehicleRepository.save(recreationalVehicle);
+        bayRepository.save(bay);
+    }
+
+    public void moveVehicle(Vehicle vehicle, Bay newBay) {
+        Optional<Bay> optionalOldBay = bayRepository.findById(vehicle.getBayId());
+        optionalOldBay.ifPresent(oldBay ->  {
+            oldBay.setOccupied(false);
+            newBay.setOccupied(true);
+            vehicle.setBayId(newBay.getId());
+
+            bayRepository.save(oldBay);
+            bayRepository.save(newBay);
+            vehicleRepository.save(vehicle);
+        });
+    }
+
+
+    public void addSeasonalRecord(RecreationalVehicle recreationalVehicle, String season, int hoursUsed, int bayLocation, String notes) {
+        SeasonalRecord seasonalRecord = new SeasonalRecord(season, hoursUsed, bayLocation, notes);
+        recreationalVehicle.getUsageLogs().add(seasonalRecord);
+
+        vehicleRepository.save(recreationalVehicle);
+    }
+
+    public void viewDetails(Vehicle vehicle) {
+        Optional<Bay> optionalBay = bayRepository.findById(vehicle.getBayId());
+        if(VehicleType.RECREATIONAL.equals(vehicle.getVehicleType())) {
+            RecreationalVehicle recreationalVehicle = (RecreationalVehicle) vehicle;
+
+            System.out.println("| RECREATIONAL VEHICLE |");
+            Table table = Clique.table(TableType.BOX_DRAW)
+                    .headers(
+                            "[*blue, bold]YEAR[/]",
+                            "[*blue, bold]MAKE[/]",
+                            "[*blue, bold]MODEL[/]",
+                            "[*blue, bold]TYPE[/]",
+                            "[*blue, bold]BAY[/]",
+                            "[*blue, bold]CONDITION[/]",
+                            "[*blue, bold]PURCHASE PRICE[/]",
+                            "[*blue, bold]DEPRECIATED VALUE[/]",
+                            "[*blue, bold]RV TYPE[/]",
+                            "[*blue, bold]STORAGE NOTES[/]",
+                            "[*blue, bold]REQUIRES TRAILER[/]"
+                    );
+            table.row(String.valueOf(recreationalVehicle.getYear()), recreationalVehicle.getMake(), recreationalVehicle.getModel(), recreationalVehicle.getVehicleType().name(),
+                    (optionalBay.isPresent()) ? optionalBay.get().getName() : "", recreationalVehicle.getCondition().name(), InputHandler.formatAsMoney(recreationalVehicle.getPurchasePrice()),
+                    InputHandler.formatAsMoney(recreationalVehicle.calculateDepreciatedValue()), recreationalVehicle.getRvType().name(), recreationalVehicle.getStorageNotes(), recreationalVehicle.isRequiresTrailer() ? "YES" : "NO");
+            table.render();
+
+            System.out.println();
+            System.out.println("| SEASONAL LOGS |");
+            List<SeasonalRecord> usageLogs = recreationalVehicle.getUsageLogs();
+            if(!usageLogs.isEmpty()) {
+                Table seasonalTable = Clique.table(TableType.BOX_DRAW)
+                        .headers(
+                                "[*blue, bold]SEASON[/]",
+                                "[*blue, bold]HOURS USED[/]",
+                                "[*blue, bold]BAY NUMBER[/]",
+                                "[*blue, bold]NOTES[/]");
+                usageLogs.forEach(seasonalRecord -> {
+                    seasonalTable.row(seasonalRecord.season(), String.valueOf(seasonalRecord.hoursUsed()), String.valueOf(seasonalRecord.bayLocation()), seasonalRecord.notes());
+                });
+                seasonalTable.render();
+            }
+            else
+            {
+                System.out.println("There are no seasonal records for this vehicle.");
+            }
+        }
+        else if(VehicleType.PASSENGER.equals(vehicle.getVehicleType())) {
+            PassengerVehicle passengerVehicle = (PassengerVehicle) vehicle;
+
+            System.out.println("| PASSENGER VEHICLE |");
+            Table table = Clique.table(TableType.BOX_DRAW)
+                    .headers(
+                            "[*blue, bold]YEAR[/]",
+                            "[*blue, bold]MAKE[/]",
+                            "[*blue, bold]MODEL[/]",
+                            "[*blue, bold]TYPE[/]",
+                            "[*blue, bold]BAY[/]",
+                            "[*blue, bold]CONDITION[/]",
+                            "[*blue, bold]PURCHASE PRICE[/]",
+                            "[*blue, bold]DEPRECIATED VALUE[/]",
+                            "[*blue, bold]ODOMETER[/]",
+                            "[*blue, bold]FUEL TYPE[/]",
+                            "[*blue, bold]NUMBER OF SEATS[/]"
+                    );
+            table.row(String.valueOf(passengerVehicle.getYear()), passengerVehicle.getMake(), passengerVehicle.getModel(), passengerVehicle.getVehicleType().name(),
+                    (optionalBay.isPresent()) ? optionalBay.get().getName() : "", passengerVehicle.getCondition().name(), InputHandler.formatAsMoney(passengerVehicle.getPurchasePrice()),
+                    InputHandler.formatAsMoney(passengerVehicle.calculateDepreciatedValue()), String.valueOf(passengerVehicle.getOdometerKm()), passengerVehicle.getFuelType().name(), String.valueOf(passengerVehicle.getNumberOfSeats()));
+            table.render();
+        }
+        else if(VehicleType.MOTORCYCLE.equals(vehicle.getVehicleType())) {
+            MotorcycleVehicle motorcycleVehicle = (MotorcycleVehicle) vehicle;
+
+            System.out.println("| MOTORCYCLE VEHICLE |");
+            Table table = Clique.table(TableType.BOX_DRAW)
+                    .headers(
+                            "[*blue, bold]YEAR[/]",
+                            "[*blue, bold]MAKE[/]",
+                            "[*blue, bold]MODEL[/]",
+                            "[*blue, bold]TYPE[/]",
+                            "[*blue, bold]BAY[/]",
+                            "[*blue, bold]CONDITION[/]",
+                            "[*blue, bold]PURCHASE PRICE[/]",
+                            "[*blue, bold]DEPRECIATED VALUE[/]",
+                            "[*blue, bold]ENGINE CC[/]",
+                            "[*blue, bold]SIDE CAR[/]",
+                            "[*blue, bold]ODOMETER[/]"
+                    );
+            table.row(String.valueOf(motorcycleVehicle.getYear()), motorcycleVehicle.getMake(), motorcycleVehicle.getModel(), motorcycleVehicle.getVehicleType().name(),
+                    (optionalBay.isPresent()) ? optionalBay.get().getName() : "", motorcycleVehicle.getCondition().name(), InputHandler.formatAsMoney(motorcycleVehicle.getPurchasePrice()),
+                    InputHandler.formatAsMoney(motorcycleVehicle.calculateDepreciatedValue()), String.valueOf(motorcycleVehicle.getOdometerKm()), passengerVehicle.getFuelType().name(), String.valueOf(passengerVehicle.getNumberOfSeats()));
+            table.render();
+        }
+
     }
 }
