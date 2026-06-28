@@ -7,6 +7,7 @@ import io.auto.enums.VehicleCondition;
 import io.auto.enums.VehicleType;
 import io.auto.model.*;
 import io.auto.repository.BayRepository;
+import io.auto.repository.MaintenanceRepository;
 import io.auto.repository.VehicleRepository;
 import io.auto.util.InputHandler;
 import io.github.kusoroadeolu.clique.Clique;
@@ -24,6 +25,8 @@ public class VehicleService {
 
     @Autowired
     private VehicleRepository vehicleRepository;
+    @Autowired
+    private MaintenanceRepository maintenanceRepository;
     @Autowired
     private BayRepository bayRepository;
 
@@ -192,5 +195,20 @@ public class VehicleService {
             table.render();
         }
 
+    }
+
+    public void deleteVehicle(Vehicle vehicle) {
+        List<MaintenanceRecord> maintenanceRecords = maintenanceRepository.findByVehicleId(vehicle.getId());
+        maintenanceRecords.forEach(maintenanceRecord -> {
+            maintenanceRepository.delete(maintenanceRecord);
+        });
+
+        Optional<Bay> optionalBay = bayRepository.findById(vehicle.getBayId());
+        optionalBay.ifPresent(bay -> {
+            bay.setOccupied(false);
+            bayRepository.save(bay);
+        });
+
+        vehicleRepository.delete(vehicle);
     }
 }

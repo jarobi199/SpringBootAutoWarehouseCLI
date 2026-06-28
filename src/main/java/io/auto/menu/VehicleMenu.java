@@ -39,9 +39,19 @@ public class VehicleMenu implements IMenu {
                 case 4 -> editVehicle();
                 case 5 -> moveVehicleToBay();
                 case 6 -> addSeasonalRecord();
+                case 7 -> deleteVehicle();
             }
         }
         while (choice != 0);
+    }
+
+    public void deleteVehicle() {
+        Vehicle vehicle = listVehiclesAndSelect();
+        System.out.println("Are you sure you want to delete this vehicle (Y/N)?:");
+        String answer = InputHandler.getStringInput();
+        if ("Y".equalsIgnoreCase(answer)) {
+            vehicleService.deleteVehicle(vehicle);
+        }
     }
 
     public void addSeasonalRecord() {
