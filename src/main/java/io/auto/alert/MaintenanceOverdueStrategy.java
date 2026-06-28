@@ -6,18 +6,18 @@ import io.auto.interfaces.AlertStrategy;
 import io.auto.model.MaintenanceRecord;
 import io.auto.model.Vehicle;
 import io.auto.service.MaintenanceService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 
+@Component
 public class MaintenanceOverdueStrategy implements AlertStrategy {
 
-    private final MaintenanceService maintenanceService;
-
-    public MaintenanceOverdueStrategy() {
-        maintenanceService = SpringContext.getBean(MaintenanceService.class);
-    }
+    @Autowired
+    private  MaintenanceService maintenanceService;
 
     @Override
     public boolean supports(Vehicle vehicle) {

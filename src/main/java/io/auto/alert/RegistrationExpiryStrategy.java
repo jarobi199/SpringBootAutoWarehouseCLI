@@ -3,10 +3,12 @@ package io.auto.alert;
 import io.auto.enums.AlertType;
 import io.auto.interfaces.AlertStrategy;
 import io.auto.model.Vehicle;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
+@Component
 public class RegistrationExpiryStrategy implements AlertStrategy {
     @Override
     public boolean supports(Vehicle vehicle) {

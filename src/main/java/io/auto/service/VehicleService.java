@@ -65,22 +65,28 @@ public class VehicleService {
                                     LocalDate purchaseDate, LocalDate registrationExpiryDate, VehicleCondition condition, String notes, long odometerKm, FuelType fuelType, int seats, boolean isElectricOrHybrid) {
         PassengerVehicle passengerVehicle  = new PassengerVehicle(SessionContext.getUser().getId(), bay.getId(), make, model, year, vin, purchasePrice, purchaseDate, registrationExpiryDate, condition,
                                                                                                     notes, odometerKm, isElectricOrHybrid, seats, fuelType);
+
         vehicleRepository.save(passengerVehicle);
+        bay.setOccupied(true);
+        bayRepository.save(bay);
     }
 
     public void addMotorcycleVehicle(Bay bay, int year, String make, String model, String vin, double purchasePrice, LocalDate purchaseDate, LocalDate registrationExpiryDate, VehicleCondition condition, String notes, int engineCC, boolean hasSideCar, long odometerKm) {
         MotorcycleVehicle motorcycleVehicle = new MotorcycleVehicle(SessionContext.getUser().getId(), bay.getId(), make, model, year, vin, purchasePrice, purchaseDate, registrationExpiryDate, condition,
                 notes, engineCC, hasSideCar, odometerKm);
+
         vehicleRepository.save(motorcycleVehicle);
+        bay.setOccupied(true);
+        bayRepository.save(bay);
     }
 
     public void addRecreationalVehicle(Bay bay, int year, String make, String model, String vin, double purchasePrice, LocalDate purchaseDate,
                                        LocalDate registrationExpiryDate, VehicleCondition condition, String notes, RvType rvType, String storageNotes, boolean requiresTrailer) {
         RecreationalVehicle recreationalVehicle = new RecreationalVehicle(SessionContext.getUser().getId(), bay.getId(), make, model, year, vin, purchasePrice, purchaseDate, registrationExpiryDate, condition,
                 notes, requiresTrailer, storageNotes, rvType);
-        bay.setOccupied(true);
 
         vehicleRepository.save(recreationalVehicle);
+        bay.setOccupied(true);
         bayRepository.save(bay);
     }
 

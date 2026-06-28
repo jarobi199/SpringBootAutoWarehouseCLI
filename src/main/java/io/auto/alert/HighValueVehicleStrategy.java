@@ -4,7 +4,9 @@ import io.auto.authentication.SessionContext;
 import io.auto.enums.AlertType;
 import io.auto.interfaces.AlertStrategy;
 import io.auto.model.Vehicle;
+import org.springframework.stereotype.Component;
 
+@Component
 public class HighValueVehicleStrategy implements AlertStrategy {
     @Override
     public boolean supports(Vehicle vehicle) {
