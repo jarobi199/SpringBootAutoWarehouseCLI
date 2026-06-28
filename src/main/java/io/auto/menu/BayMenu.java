@@ -116,6 +116,7 @@ public class BayMenu implements IMenu {
         if (!availableBays.isEmpty()) {
             for (Bay b : availableBays) {
                 System.out.println("[" + number + "] " + b.getDisplay());
+                number++;
             }
             System.out.println("Select a bay:");
             choice = InputHandler.getIntegerInput();

@@ -46,7 +46,6 @@ public class BayService {
                         "[*blue, bold]NUMBER[/]",
                         "[*blue, bold]NAME[/]",
                         "[*blue, bold]TYPE[/]",
-                        "[*blue, bold]TYPE[/]",
                         "[*blue, bold]OCCUPANCY STATUS[/]",
                         "[*blue, bold]NOTES[/]"
                 );
