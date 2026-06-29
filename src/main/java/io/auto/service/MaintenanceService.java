@@ -57,4 +57,7 @@ public class MaintenanceService {
         }
     }
 
+    public void deleteMaintenanceRecord(MaintenanceRecord maintenanceRecord) {
+        maintenanceRepository.delete(maintenanceRecord);
+    }
 }

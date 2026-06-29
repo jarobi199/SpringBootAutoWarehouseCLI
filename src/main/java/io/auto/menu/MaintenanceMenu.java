@@ -1,7 +1,10 @@
 package io.auto.menu;
 
+import com.sun.tools.javac.Main;
+import io.auto.authentication.SessionContext;
 import io.auto.enums.ServiceType;
 import io.auto.interfaces.IMenu;
+import io.auto.model.MaintenanceRecord;
 import io.auto.model.Vehicle;
 import io.auto.service.MaintenanceService;
 import io.auto.util.InputHandler;
@@ -9,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Component
 public class MaintenanceMenu implements IMenu {
@@ -34,6 +38,15 @@ public class MaintenanceMenu implements IMenu {
     }
 
     public void deleteRecord() {
+        Vehicle vehicle = vehicleMenu.listVehiclesAndSelect();
+        List<MaintenanceRecord> maintenanceRecordList = maintenanceService.findByVehicleId(vehicle.getId());
+        MaintenanceRecord maintenanceRecord = listMaintenanceRecordsAndSelect(maintenanceRecordList);
+        System.out.println("Are you sure you want to delete maintenance record (Y/N)?");
+        String answer = InputHandler.getStringInput();
+        if (answer.equalsIgnoreCase("Y")) {
+            maintenanceService.deleteMaintenanceRecord(maintenanceRecord);
+            System.out.println("Maintenance record deleted successfully");
+        }
     }
 
     public void viewHistoryByVehicle() {
@@ -61,6 +74,27 @@ public class MaintenanceMenu implements IMenu {
         System.out.println("Maintenance record has been added successfully.");
     }
 
+    public MaintenanceRecord listMaintenanceRecordsAndSelect(List<MaintenanceRecord> maintenanceRecordList) {
+        int number = 1;
+        MaintenanceRecord maintenanceRecord = null;
+        int choice = 0;
+
+        if (!maintenanceRecordList.isEmpty()) {
+            for (MaintenanceRecord m : maintenanceRecordList) {
+                System.out.println("[" + number + "] " +  m.getDescription() + " (" + m.getServiceType().toString() + ")");
+                number++;
+            }
+            System.out.println("Select a maintenance record:");
+            choice = InputHandler.getIntegerInput();
+            maintenanceRecord = maintenanceRecordList.get(choice - 1);
+        }
+        else
+        {
+            System.out.println("There are no maintenance records available.");
+        }
+
+        return maintenanceRecord;
+    }
     @Override
     public void printOptions() {
         System.out.println();
