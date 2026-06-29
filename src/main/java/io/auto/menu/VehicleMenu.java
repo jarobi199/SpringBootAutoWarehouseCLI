@@ -195,6 +195,7 @@ public class VehicleMenu implements IMenu {
     @Override
     public void printOptions() {
         System.out.println();
+        System.out.println("| VEHICLE MENU |");
         System.out.println("[1] List all vehicles");
         System.out.println("[2] Add vehicle");
         System.out.println("[3] View vehicle detail");

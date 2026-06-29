@@ -98,6 +98,7 @@ public class MaintenanceMenu implements IMenu {
     @Override
     public void printOptions() {
         System.out.println();
+        System.out.println("| MAINTENANCE MENU |");
         System.out.println("[1] Log maintenance record");
         System.out.println("[2] View history by vehicle");
         System.out.println("[3] Delete record");

@@ -55,6 +55,7 @@ public class MainMenu implements IMenu {
     }
 
     public void printOptions() {
+        System.out.println("| MAIN MENU |");
         System.out.println("[1] Bays");
         System.out.println("[2] Vehicles");
         System.out.println("[3] Maintenance");

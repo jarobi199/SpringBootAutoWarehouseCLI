@@ -99,6 +99,7 @@ public class BayMenu implements IMenu {
     @Override
     public void printOptions() {
         System.out.println();
+        System.out.println("| BAY MENU |");
         System.out.println("[1] List all bays");
         System.out.println("[2] List vacant bays");
         System.out.println("[3] Add bay");
