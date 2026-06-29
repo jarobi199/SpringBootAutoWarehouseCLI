@@ -73,6 +73,7 @@ public class SettingsMenu implements IMenu {
     }
 
     public void printOptions() {
+        System.out.println();
         System.out.println("[1] Change password");
         System.out.println("[2] Set high value threshold");
         if(verifyAdmin()) {

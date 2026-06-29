@@ -1,10 +1,7 @@
 package io.auto.service;
 
 import io.auto.authentication.SessionContext;
-import io.auto.enums.FuelType;
-import io.auto.enums.RvType;
-import io.auto.enums.VehicleCondition;
-import io.auto.enums.VehicleType;
+import io.auto.enums.*;
 import io.auto.model.*;
 import io.auto.repository.BayRepository;
 import io.auto.repository.MaintenanceRepository;
@@ -215,6 +212,7 @@ public class VehicleService {
                     motorcycleVehicle.getNotes(), String.valueOf(motorcycleVehicle.getEngineCC()), motorcycleVehicle.isHasSideCar() ? "YES" : "NO", String.valueOf(motorcycleVehicle.getOdometerKm()));
             table.render();
         }
+        System.out.println();
 
         System.out.println("| MAINTENANCE RECORDS |");
         List<MaintenanceRecord> maintenanceRecords = maintenanceRepository.findByVehicleId(vehicle.getId()) ;
@@ -223,6 +221,20 @@ public class VehicleService {
         }
         else
         {
+            Table maintenanceTable = Clique.table(TableType.BOX_DRAW)
+                .headers(
+                        "[*blue, bold]SERVICE DATE[/]",
+                        "[*blue, bold]SERVICE TYPE[/]",
+                        "[*blue, bold]DESCRIPTION[/]",
+                        "[*blue, bold]COST[/]",
+                        "[*blue, bold]MILEAGE[/]",
+                        "[*blue, bold]TECHNICIAN[/]"
+                );
+            maintenanceRecords.forEach(maintenanceRecord -> {
+                maintenanceTable.row(maintenanceRecord.getServiceDate().toString(), maintenanceRecord.getServiceType().name(), maintenanceRecord.getDescription(),
+                        InputHandler.formatAsMoney(maintenanceRecord.getCost()), String.valueOf(maintenanceRecord.getMileage()), maintenanceRecord.getTechnician());
+            });
+            maintenanceTable.render();
 
         }
     }

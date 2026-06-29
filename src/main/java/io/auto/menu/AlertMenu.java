@@ -47,6 +47,7 @@ public class AlertMenu implements IMenu {
 
     @Override
     public void printOptions() {
+        System.out.println();
         System.out.println("[1] View all alerts");
         System.out.println("[2] Registration expiry alerts");
         System.out.println("[3] Maintenance overdue alerts");

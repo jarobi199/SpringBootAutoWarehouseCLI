@@ -12,6 +12,7 @@ public class ReportMenu implements IMenu {
 
     @Override
     public void printOptions() {
+        System.out.println();
 
     }
 }

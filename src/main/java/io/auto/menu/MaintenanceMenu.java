@@ -27,8 +27,7 @@ public class MaintenanceMenu implements IMenu {
             switch (choice) {
                 case 1 -> logMaintenanceRecord();
                 case 2 -> viewHistoryByVehicle();
-                case 3 -> viewAllRecentRecords();
-                case 4 -> deleteRecord();
+                case 3 -> deleteRecord();
             }
         }
         while (choice != 0);
@@ -37,10 +36,9 @@ public class MaintenanceMenu implements IMenu {
     public void deleteRecord() {
     }
 
-    public void viewAllRecentRecords() {
-    }
-
     public void viewHistoryByVehicle() {
+        Vehicle vehicle = vehicleMenu.listVehiclesAndSelect();
+        maintenanceService.viewMaintenanceRecords(vehicle);
     }
 
     public void logMaintenanceRecord() {
@@ -65,10 +63,10 @@ public class MaintenanceMenu implements IMenu {
 
     @Override
     public void printOptions() {
+        System.out.println();
         System.out.println("[1] Log maintenance record");
         System.out.println("[2] View history by vehicle");
-        System.out.println("[3] View all recent records");
-        System.out.println("[4] Delete record");
+        System.out.println("[3] Delete record");
         System.out.println("[0] Back");
     }
 }
