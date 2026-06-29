@@ -119,6 +119,7 @@ public class VehicleService {
             System.out.println("| RECREATIONAL VEHICLE |");
             Table table = Clique.table(TableType.BOX_DRAW)
                     .headers(
+                            "[*blue, bold]VIN[/]",
                             "[*blue, bold]YEAR[/]",
                             "[*blue, bold]MAKE[/]",
                             "[*blue, bold]MODEL[/]",
@@ -126,14 +127,18 @@ public class VehicleService {
                             "[*blue, bold]BAY[/]",
                             "[*blue, bold]CONDITION[/]",
                             "[*blue, bold]PURCHASE PRICE[/]",
+                            "[*blue, bold]PURCHASE DATE[/]",
+                            "[*blue, bold]REGISTRATION EXPIRY DATE[/]",
                             "[*blue, bold]DEPRECIATED VALUE[/]",
+                            "[*blue, bold]NOTES[/]",
                             "[*blue, bold]RV TYPE[/]",
                             "[*blue, bold]STORAGE NOTES[/]",
                             "[*blue, bold]REQUIRES TRAILER[/]"
                     );
-            table.row(String.valueOf(recreationalVehicle.getYear()), recreationalVehicle.getMake(), recreationalVehicle.getModel(), recreationalVehicle.getVehicleType().name(),
+            table.row(recreationalVehicle.getVin(), String.valueOf(recreationalVehicle.getYear()), recreationalVehicle.getMake(), recreationalVehicle.getModel(), recreationalVehicle.getVehicleType().name(),
                     (optionalBay.isPresent()) ? optionalBay.get().getName() : "", recreationalVehicle.getCondition().name(), InputHandler.formatAsMoney(recreationalVehicle.getPurchasePrice()),
-                    InputHandler.formatAsMoney(recreationalVehicle.calculateDepreciatedValue()), recreationalVehicle.getRvType().name(), recreationalVehicle.getStorageNotes(), recreationalVehicle.isRequiresTrailer() ? "YES" : "NO");
+                    recreationalVehicle.getPurchaseDate().toString(), recreationalVehicle.getRegistrationExpiryDate().toString(), InputHandler.formatAsMoney(recreationalVehicle.calculateDepreciatedValue()),
+                    recreationalVehicle.getNotes(), recreationalVehicle.getRvType().name(), recreationalVehicle.getStorageNotes(), recreationalVehicle.isRequiresTrailer() ? "YES" : "NO");
             table.render();
 
             System.out.println();
@@ -160,6 +165,7 @@ public class VehicleService {
             System.out.println("| PASSENGER VEHICLE |");
             Table table = Clique.table(TableType.BOX_DRAW)
                     .headers(
+                            "[*blue, bold]VIN[/]",
                             "[*blue, bold]YEAR[/]",
                             "[*blue, bold]MAKE[/]",
                             "[*blue, bold]MODEL[/]",
@@ -167,15 +173,18 @@ public class VehicleService {
                             "[*blue, bold]BAY[/]",
                             "[*blue, bold]CONDITION[/]",
                             "[*blue, bold]PURCHASE PRICE[/]",
+                            "[*blue, bold]PURCHASE DATE[/]",
+                            "[*blue, bold]REGISTRATION EXPIRY DATE[/]",
                             "[*blue, bold]DEPRECIATED VALUE[/]",
+                            "[*blue, bold]NOTES[/]",
                             "[*blue, bold]ODOMETER[/]",
                             "[*blue, bold]FUEL TYPE[/]",
-                            "[*blue, bold]NUMBER OF SEATS[/]",
-                            "[*blue, bold]NOTES[/]"
+                            "[*blue, bold]NUMBER OF SEATS[/]"
                     );
-            table.row(String.valueOf(passengerVehicle.getYear()), passengerVehicle.getMake(), passengerVehicle.getModel(), passengerVehicle.getVehicleType().name(),
+            table.row(passengerVehicle.getVin(), String.valueOf(passengerVehicle.getYear()), passengerVehicle.getMake(), passengerVehicle.getModel(), passengerVehicle.getVehicleType().name(),
                     (optionalBay.isPresent()) ? optionalBay.get().getName() : "", passengerVehicle.getCondition().name(), InputHandler.formatAsMoney(passengerVehicle.getPurchasePrice()),
-                    InputHandler.formatAsMoney(passengerVehicle.calculateDepreciatedValue()), String.valueOf(passengerVehicle.getOdometerKm()), passengerVehicle.getFuelType().name(), String.valueOf(passengerVehicle.getNumberOfSeats()), passengerVehicle.getNotes());
+                    passengerVehicle.getPurchaseDate().toString(), passengerVehicle.getRegistrationExpiryDate().toString(), InputHandler.formatAsMoney(passengerVehicle.calculateDepreciatedValue()),
+                    passengerVehicle.getNotes(), String.valueOf(passengerVehicle.getOdometerKm()), passengerVehicle.getFuelType().name(), String.valueOf(passengerVehicle.getNumberOfSeats()));
             table.render();
         }
         else if(VehicleType.MOTORCYCLE.equals(vehicle.getVehicleType())) {
@@ -184,6 +193,7 @@ public class VehicleService {
             System.out.println("| MOTORCYCLE VEHICLE |");
             Table table = Clique.table(TableType.BOX_DRAW)
                     .headers(
+                            "[*blue, bold]VIN[/]",
                             "[*blue, bold]YEAR[/]",
                             "[*blue, bold]MAKE[/]",
                             "[*blue, bold]MODEL[/]",
@@ -191,14 +201,18 @@ public class VehicleService {
                             "[*blue, bold]BAY[/]",
                             "[*blue, bold]CONDITION[/]",
                             "[*blue, bold]PURCHASE PRICE[/]",
+                            "[*blue, bold]PURCHASE DATE[/]",
+                            "[*blue, bold]REGISTRATION EXPIRY DATE[/]",
                             "[*blue, bold]DEPRECIATED VALUE[/]",
+                            "[*blue, bold]NOTES[/]",
                             "[*blue, bold]ENGINE CC[/]",
                             "[*blue, bold]SIDE CAR[/]",
                             "[*blue, bold]ODOMETER[/]"
                     );
-            table.row(String.valueOf(motorcycleVehicle.getYear()), motorcycleVehicle.getMake(), motorcycleVehicle.getModel(), motorcycleVehicle.getVehicleType().name(),
+            table.row(motorcycleVehicle.getVin(), String.valueOf(motorcycleVehicle.getYear()), motorcycleVehicle.getMake(), motorcycleVehicle.getModel(), motorcycleVehicle.getVehicleType().name(),
                     (optionalBay.isPresent()) ? optionalBay.get().getName() : "", motorcycleVehicle.getCondition().name(), InputHandler.formatAsMoney(motorcycleVehicle.getPurchasePrice()),
-                    InputHandler.formatAsMoney(motorcycleVehicle.calculateDepreciatedValue()), String.valueOf(motorcycleVehicle.getEngineCC()), motorcycleVehicle.isHasSideCar() ? "YES" : "NO", String.valueOf(motorcycleVehicle.getOdometerKm()));
+                    motorcycleVehicle.getPurchaseDate().toString(), motorcycleVehicle.getRegistrationExpiryDate().toString(), InputHandler.formatAsMoney(motorcycleVehicle.calculateDepreciatedValue()),
+                    motorcycleVehicle.getNotes(), String.valueOf(motorcycleVehicle.getEngineCC()), motorcycleVehicle.isHasSideCar() ? "YES" : "NO", String.valueOf(motorcycleVehicle.getOdometerKm()));
             table.render();
         }
 
