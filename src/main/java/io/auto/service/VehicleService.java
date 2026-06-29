@@ -216,6 +216,15 @@ public class VehicleService {
             table.render();
         }
 
+        System.out.println("| MAINTENANCE RECORDS |");
+        List<MaintenanceRecord> maintenanceRecords = maintenanceRepository.findByVehicleId(vehicle.getId()) ;
+        if (maintenanceRecords.isEmpty()) {
+            System.out.println("No maintenance records found");
+        }
+        else
+        {
+
+        }
     }
 
     public void deleteVehicle(Vehicle vehicle) {
