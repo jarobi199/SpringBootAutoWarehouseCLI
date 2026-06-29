@@ -170,11 +170,12 @@ public class VehicleService {
                             "[*blue, bold]DEPRECIATED VALUE[/]",
                             "[*blue, bold]ODOMETER[/]",
                             "[*blue, bold]FUEL TYPE[/]",
-                            "[*blue, bold]NUMBER OF SEATS[/]"
+                            "[*blue, bold]NUMBER OF SEATS[/]",
+                            "[*blue, bold]NOTES[/]"
                     );
             table.row(String.valueOf(passengerVehicle.getYear()), passengerVehicle.getMake(), passengerVehicle.getModel(), passengerVehicle.getVehicleType().name(),
                     (optionalBay.isPresent()) ? optionalBay.get().getName() : "", passengerVehicle.getCondition().name(), InputHandler.formatAsMoney(passengerVehicle.getPurchasePrice()),
-                    InputHandler.formatAsMoney(passengerVehicle.calculateDepreciatedValue()), String.valueOf(passengerVehicle.getOdometerKm()), passengerVehicle.getFuelType().name(), String.valueOf(passengerVehicle.getNumberOfSeats()));
+                    InputHandler.formatAsMoney(passengerVehicle.calculateDepreciatedValue()), String.valueOf(passengerVehicle.getOdometerKm()), passengerVehicle.getFuelType().name(), String.valueOf(passengerVehicle.getNumberOfSeats()), passengerVehicle.getNotes());
             table.render();
         }
         else if(VehicleType.MOTORCYCLE.equals(vehicle.getVehicleType())) {
@@ -216,5 +217,27 @@ public class VehicleService {
         });
 
         vehicleRepository.delete(vehicle);
+    }
+
+    public void editVehicle(Vehicle vehicle, LocalDate newRegistrationExpiryDate, VehicleCondition newCondition, String newNotes, String newStorageNotes, int newEngineCC, long newOdometerKm, FuelType newFuelType) {
+        vehicle.setRegistrationExpiryDate(newRegistrationExpiryDate);
+        vehicle.setCondition(newCondition);
+        vehicle.setNotes(newNotes);
+        if(vehicle.getVehicleType().equals(VehicleType.RECREATIONAL)) {
+            RecreationalVehicle recreationalVehicle = (RecreationalVehicle) vehicle;
+            recreationalVehicle.setStorageNotes(newStorageNotes);
+            vehicleRepository.save(recreationalVehicle);
+        }
+        else if(vehicle.getVehicleType().equals(VehicleType.MOTORCYCLE)) {
+            MotorcycleVehicle motorcycleVehicle = (MotorcycleVehicle) vehicle;
+            motorcycleVehicle.setEngineCC(newEngineCC);
+            vehicleRepository.save(motorcycleVehicle);
+        }
+        else if (vehicle.getVehicleType().equals(VehicleType.PASSENGER)) {
+            PassengerVehicle passengerVehicle = (PassengerVehicle) vehicle;
+            passengerVehicle.setFuelType(newFuelType);
+            passengerVehicle.setOdometerKm(newOdometerKm);
+            vehicleRepository.save(passengerVehicle);
+        }
     }
 }

@@ -80,6 +80,39 @@ public class VehicleMenu implements IMenu {
     }
 
     public void editVehicle() {
+        Vehicle vehicle = listVehiclesAndSelect();
+        if (vehicle != null) {
+            System.out.println("Enter the registration expiry date (yyyy-MM-dd):");
+            LocalDate newRegistrationExpiryDate = InputHandler.getDateInput();
+            System.out.println("Enter the condition (EXCELLENT, GOOD, FAIR, POOR, PARTS_ONLY):");
+            VehicleCondition newCondition = VehicleCondition.valueOf(InputHandler.getStringInput().toUpperCase());
+            System.out.println("Enter the notes:");
+            String newNotes = InputHandler.getStringInput();
+            String newStorageNotes = null;
+            int newEngineCC = 0;
+            long newOdometerKm = 0;
+            FuelType newFuelType = null;
+
+            switch (vehicle.getVehicleType()) {
+                case RECREATIONAL -> {
+                    System.out.println("Enter the storage notes:");
+                    newStorageNotes = InputHandler.getStringInput();
+                }
+                case MOTORCYCLE ->  {
+                    System.out.println("Enter the engine CC:");
+                    newEngineCC = InputHandler.getIntegerInput();
+                }
+                case PASSENGER ->  {
+                    System.out.println("Enter the odometer in Km:");
+                    newOdometerKm = InputHandler.getIntegerInput();
+                    System.out.println("Enter the fuel type (GASOLINE, DIESEL, ELECTRIC, HYBRID , OTHER):");
+                    newFuelType = FuelType.valueOf(InputHandler.getStringInput().toUpperCase());
+                }
+            }
+
+            vehicleService.editVehicle(vehicle, newRegistrationExpiryDate, newCondition, newNotes, newStorageNotes, newEngineCC, newOdometerKm, newFuelType);
+            System.out.println("Vehicle has been edited successfully!");
+        }
     }
 
     public void viewVehicleDetail() {
