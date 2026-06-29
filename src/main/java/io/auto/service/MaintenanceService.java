@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -31,7 +32,7 @@ public class MaintenanceService {
 
     public void viewMaintenanceRecords(Vehicle vehicle) {
         System.out.println("| MAINTENANCE RECORDS |");
-        List<MaintenanceRecord> maintenanceRecords = maintenanceRepository.findByVehicleId(vehicle.getId());
+        List<MaintenanceRecord> maintenanceRecords = maintenanceRepository.findByVehicleId(vehicle.getId()).stream().sorted(Comparator.comparing(MaintenanceRecord::getServiceDate).reversed()).toList();
         if (maintenanceRecords.isEmpty()) {
             System.out.println("No maintenance records found");
         }
