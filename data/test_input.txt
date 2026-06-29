@@ -163,7 +163,7 @@ GASOLINE
 
 --- TEST 22: Add seasonal record to the Sea Ray (vehicle 3)
 6
-3
+1
 Summer 2024
 42
 3

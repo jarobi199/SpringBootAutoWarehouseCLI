@@ -13,9 +13,9 @@ public class InputHandler {
     // Set DEBUG = true to read input from the test file instead of
     // the command line. Flip back to false for normal operation.
     // ----------------------------------------------------------------
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
     private static final String DEBUG_FILE = "C:\\Users\\jarob\\Documents\\Java\\Claude\\SpringBootAutoWarehouseCLI\\data\\test_input.txt";
-    private static final int DEBUG_DELAY_MS = 500;
+    private static final int DEBUG_DELAY_MS = 1000;
 
     private static final Scanner consoleScanner = new Scanner(System.in);
     private static BufferedReader debugReader = null;

@@ -33,7 +33,7 @@ public class MaintenanceOverdueStrategy implements AlertStrategy {
                 .stream().max(Comparator.comparing(MaintenanceRecord::getServiceDate)).orElse(null);
 
         if(((maintenanceRecord == null) && (vehicleAge > 1)) || ( (maintenanceRecord != null)  && maintenanceRecordAgeGreaterThanOne(maintenanceRecord))) {
-            alertResult = new AlertResult(vehicle, AlertType.MAINTENANCE_OVERDUE, (maintenanceRecord == null) ? "This vehicle has not been serviced!" : "The last service date of this vehicle was" + maintenanceRecord.getServiceDate().toString());
+            alertResult = new AlertResult(vehicle, AlertType.MAINTENANCE_OVERDUE, (maintenanceRecord == null) ? "This vehicle has not been serviced!" : "The last service date of this vehicle was " + maintenanceRecord.getServiceDate().toString());
         }
         return alertResult;
     }
