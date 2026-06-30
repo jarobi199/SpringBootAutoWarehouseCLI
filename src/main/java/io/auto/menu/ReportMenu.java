@@ -1,6 +1,7 @@
 package io.auto.menu;
 
 import io.auto.interfaces.IMenu;
+import io.auto.model.Vehicle;
 import io.auto.service.ReportService;
 import io.auto.util.InputHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReportMenu implements IMenu {
 
+    @Autowired
+    private VehicleMenu vehicleMenu;
     @Autowired
     private ReportService reportService;
 
@@ -19,8 +22,8 @@ public class ReportMenu implements IMenu {
             printOptions();
             choice = InputHandler.getIntegerInput();
             switch (choice) {
-                case 1 -> fleetSummary();
-                case 2 -> vehicleValuationReport();
+                case 1 -> reportService.fleetSummary();
+                case 2 -> reportService.vehicleValuationReport();
                 case 3 -> costOfOwnershipReport();
                 case 4 -> maintenanceCostByType();
                 case 5 -> bayOccupancyReport();
@@ -29,22 +32,16 @@ public class ReportMenu implements IMenu {
         while (choice != 0);
     }
 
-    private void fleetSummary() {
-        reportService.fleetSummary();
-    }
 
     public void bayOccupancyReport() {
     }
 
-    private void maintenanceCostByType() {
+    public void maintenanceCostByType() {
     }
 
     public void costOfOwnershipReport() {
-
-    }
-
-    public void vehicleValuationReport() {
-        reportService.vehicleValuationReport();
+        Vehicle vehicle = vehicleMenu.listVehiclesAndSelect();
+        reportService.costOfOwnership(vehicle);
     }
 
     @Override

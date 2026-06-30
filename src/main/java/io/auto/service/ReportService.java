@@ -2,9 +2,12 @@ package io.auto.service;
 
 import io.auto.authentication.SessionContext;
 import io.auto.enums.VehicleType;
+import io.auto.model.CostReport;
 import io.auto.model.FleetSummary;
+import io.auto.model.MaintenanceRecord;
 import io.auto.model.Vehicle;
 import io.auto.repository.BayRepository;
+import io.auto.repository.MaintenanceRepository;
 import io.auto.repository.VehicleRepository;
 import io.auto.util.BarChartUtil;
 import io.auto.util.InputHandler;
@@ -26,6 +29,8 @@ public class ReportService {
     private VehicleRepository vehicleRepository;
     @Autowired
     private BayRepository bayRepository;
+    @Autowired
+    private MaintenanceRepository maintenanceRepository;
 
     public void fleetSummary() {
         int totalVehicles = vehicleRepository.findByUserId(SessionContext.getUser().getId()).size();
@@ -74,5 +79,24 @@ public class ReportService {
                   String.valueOf(ChronoUnit.YEARS.between(vehicle.getPurchaseDate(), LocalDate.now())));
         }
         valuationReportTable.render();
+    }
+
+    public void costOfOwnership(Vehicle vehicle) {
+        System.out.println("| COST OF OWNERSHIP REPORT |");
+        Table costOfOwnershipTable = Clique.table(TableType.BOX_DRAW)
+                .headers(
+                        "[*blue, bold]VEHICLE[/]",
+                        "[*blue, bold]PURCHASE PRICE[/]",
+                        "[*blue, bold]TOTAL MAINTENANCE SPEND[/]",
+                        "[*blue, bold]DEPRECIATED VALUE[/]",
+                        "[*blue, bold]NET COST[/]"
+                );
+
+        double totalMaintenanceSpend = maintenanceRepository.findByVehicleId(vehicle.getId()).stream().mapToDouble(MaintenanceRecord::getCost).sum();
+        double netCost = vehicle.getPurchasePrice() + totalMaintenanceSpend - vehicle.calculateDepreciatedValue();
+        CostReport costReport = new CostReport(vehicle.getVehicleDisplay(), vehicle.getPurchasePrice(), totalMaintenanceSpend, vehicle.calculateDepreciatedValue(), netCost);
+
+        costOfOwnershipTable.row(costReport.vehicleSummary(),  InputHandler.formatAsMoney(costReport.purchasePrice()),  InputHandler.formatAsMoney(costReport.totalMaintenanceSpend()), InputHandler.formatAsMoney(costReport.depreciatedValue()), InputHandler.formatAsMoney(costReport.netCostOfOwnership()));
+        costOfOwnershipTable.render();
     }
 }
