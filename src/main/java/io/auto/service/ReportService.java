@@ -128,8 +128,9 @@ public class ReportService {
                             "[*blue, bold]OCCUPIED BAYS[/]",
                             "[*blue, bold]VACANT BAYS[/]"
                     );
-
+            bayOccupancyTable.row(String.valueOf(totalBays), String.valueOf(occupiedBays), String.valueOf(vacantBays));
             bayOccupancyTable.render();
+            System.out.println();
         }
     }
 
