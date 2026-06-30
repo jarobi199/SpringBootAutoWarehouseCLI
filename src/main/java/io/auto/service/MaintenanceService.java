@@ -32,7 +32,7 @@ public class MaintenanceService {
 
     public void viewMaintenanceRecords(Vehicle vehicle) {
         System.out.println("| MAINTENANCE RECORDS |");
-        List<MaintenanceRecord> maintenanceRecords = maintenanceRepository.findByVehicleId(vehicle.getId()).stream().sorted(Comparator.comparing(MaintenanceRecord::getServiceDate).reversed()).toList();
+        List<MaintenanceRecord> maintenanceRecords = maintenanceRepository.findByVehicleIdOrderByServiceDateDesc(vehicle.getId());
         if (maintenanceRecords.isEmpty()) {
             System.out.println("No maintenance records found");
         }

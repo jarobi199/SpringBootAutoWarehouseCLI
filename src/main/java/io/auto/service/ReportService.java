@@ -99,4 +99,46 @@ public class ReportService {
         costOfOwnershipTable.row(costReport.vehicleSummary(),  InputHandler.formatAsMoney(costReport.purchasePrice()),  InputHandler.formatAsMoney(costReport.totalMaintenanceSpend()), InputHandler.formatAsMoney(costReport.depreciatedValue()), InputHandler.formatAsMoney(costReport.netCostOfOwnership()));
         costOfOwnershipTable.render();
     }
+
+    public void maintenanceCostByType() {
+
+    }
+
+  /*
+    class Item {
+        private String name;
+        private int quantity;
+
+        public Item(String name, int quantity) {
+            this.name = name;
+            this.quantity = quantity;
+        }
+
+        public String getName() { return name; }
+        public int getQuantity() { return quantity; }
+    }
+
+    public class Main {
+        public static void main(String[] args) {
+            // 1. Create a list of items with duplicate names
+            List<Item> items = Arrays.asList(
+                    new Item("Apple", 10),
+                    new Item("Banana", 20),
+                    new Item("Apple", 15),
+                    new Item("Orange", 5),
+                    new Item("Banana", 5)
+            );
+
+            // 2. Group by item name and sum the quantities
+            Map<String, Integer> totalByProduct = items.stream()
+                    .collect(Collectors.groupingBy(
+                            Item::getName,                             // Key extractor (Group By)
+                            Collectors.summingInt(Item::getQuantity)   // Downstream collector (Sum)
+                    ));
+
+            // 3. Print the resulting Map
+            System.out.println(totalByProduct);
+        }
+    }*/
+
 }
