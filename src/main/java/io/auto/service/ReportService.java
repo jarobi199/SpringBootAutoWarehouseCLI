@@ -14,6 +14,11 @@ import io.github.kusoroadeolu.clique.configuration.TableType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
+import java.util.List;
+
 @Service
 public class ReportService {
 
@@ -27,7 +32,8 @@ public class ReportService {
         int totalBays =  bayRepository.findByUserId(SessionContext.getUser().getId()).size();
         double totalFleetPurchaseValue = vehicleRepository.findByUserId(SessionContext.getUser().getId()).stream().mapToDouble(Vehicle::getPurchasePrice).sum();
         double totalFleetDepreciatedValue = vehicleRepository.findByUserId(SessionContext.getUser().getId()).stream().mapToDouble(Vehicle::calculateDepreciatedValue).sum();
-        int occupancyRate = (totalVehicles / totalBays) * 100;
+        double occupancyRateDouble = (double) totalVehicles / totalBays;
+        int occupancyRate = (int) (occupancyRateDouble * 100);
 
         FleetSummary fleetSummary = new FleetSummary(totalVehicles, totalBays, occupancyRate, totalFleetPurchaseValue, totalFleetDepreciatedValue);
         System.out.println("| FLEET SUMMARY |");
@@ -48,5 +54,25 @@ public class ReportService {
             barChart.bar(vehicleType.name(), total);
         }
         barChart.showTotal(true).render();
+    }
+
+    public void vehicleValuationReport() {
+        List<Vehicle> vehicles = vehicleRepository.findByUserId(SessionContext.getUser().getId()).stream().sorted(Comparator.comparing(Vehicle::getPurchasePrice).reversed()).toList();
+
+        System.out.println("| VEHICLE VALUATION REPORT |");
+        Table valuationReportTable = Clique.table(TableType.BOX_DRAW)
+                .headers(
+                        "[*blue, bold]VEHICLE[/]",
+                        "[*blue, bold]PURCHASE PRICE[/]",
+                        "[*blue, bold]DEPRECIATED VALUE[/]",
+                        "[*blue, bold]PERCENTAGE OF VALUE RETAINED[/]",
+                        "[*blue, bold]YEARS OWNED[/]"
+                );
+        for (Vehicle vehicle : vehicles) {
+            double percentageOfValueRetained = ((vehicle.getPurchasePrice() - vehicle.calculateDepreciatedValue()) / vehicle.getPurchasePrice()) * 100;
+            valuationReportTable.row(vehicle.getVehicleDisplay(), InputHandler.formatAsMoney(vehicle.getPurchasePrice()), InputHandler.formatAsMoney(vehicle.calculateDepreciatedValue()), percentageOfValueRetained + "%",
+                  String.valueOf(ChronoUnit.YEARS.between(vehicle.getPurchaseDate(), LocalDate.now())));
+        }
+        valuationReportTable.render();
     }
 }

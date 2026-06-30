@@ -44,7 +44,7 @@ public class ReportMenu implements IMenu {
     }
 
     public void vehicleValuationReport() {
-
+        reportService.vehicleValuationReport();
     }
 
     @Override
