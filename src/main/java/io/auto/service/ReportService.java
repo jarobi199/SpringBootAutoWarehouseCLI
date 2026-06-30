@@ -1,6 +1,7 @@
 package io.auto.service;
 
 import io.auto.authentication.SessionContext;
+import io.auto.enums.ServiceType;
 import io.auto.enums.VehicleType;
 import io.auto.model.CostReport;
 import io.auto.model.FleetSummary;
@@ -21,6 +22,8 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ReportService {
@@ -101,7 +104,11 @@ public class ReportService {
     }
 
     public void maintenanceCostByType() {
-
+        List<String> vehicleIdList = vehicleRepository.findByUserId(SessionContext.getUser().getId()).stream().map(Vehicle::getId).toList();
+        List<MaintenanceRecord> maintenanceRecords = maintenanceRepository.findByVehicleIdIn(vehicleIdList);
+        Map<ServiceType,Double> maintenanceCostByTypeMap = maintenanceRecords.stream().collect(Collectors.groupingBy(
+                MaintenanceRecord::getServiceType,
+                Collectors.summingDouble(MaintenanceRecord::getCost)));
     }
 
   /*
