@@ -1,12 +1,10 @@
 package io.auto.service;
 
 import io.auto.authentication.SessionContext;
+import io.auto.enums.BayType;
 import io.auto.enums.ServiceType;
 import io.auto.enums.VehicleType;
-import io.auto.model.CostReport;
-import io.auto.model.FleetSummary;
-import io.auto.model.MaintenanceRecord;
-import io.auto.model.Vehicle;
+import io.auto.model.*;
 import io.auto.repository.BayRepository;
 import io.auto.repository.MaintenanceRepository;
 import io.auto.repository.VehicleRepository;
@@ -117,4 +115,23 @@ public class ReportService {
         builder.showTotal(true).render();
     }
 
+    public void bayOccupancyReport() {
+        for(BayType bayType : BayType.values()) {
+            List<Bay> bays =bayRepository.findByUserIdAndBayType(SessionContext.getUser().getId(), bayType);
+            int totalBays = bays.size();
+            int occupiedBays = bays.stream().filter(Bay::isOccupied).toList().size();
+            int vacantBays = bays.stream().filter(bay -> !bay.isOccupied()).toList().size();
+            System.out.println("| " + bayType.name() + " BAY |");
+            Table bayOccupancyTable = Clique.table(TableType.BOX_DRAW)
+                    .headers(
+                            "[*blue, bold]TOTAL BAYS[/]",
+                            "[*blue, bold]OCCUPIED BAYS[/]",
+                            "[*blue, bold]VACANT BAYS[/]"
+                    );
+
+            bayOccupancyTable.render();
+        }
+    }
+
+    //Occupancy count by bay type (STANDARD, OVERSIZED, etc.). Shows total bays, occupied bays, and vacant bays per type. Occupancy rate per type as a bar chart. Useful for facilities planning.
 }

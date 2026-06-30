@@ -26,14 +26,10 @@ public class ReportMenu implements IMenu {
                 case 2 -> reportService.vehicleValuationReport();
                 case 3 -> costOfOwnershipReport();
                 case 4 -> reportService.maintenanceCostByType();
-                case 5 -> bayOccupancyReport();
+                case 5 -> reportService.bayOccupancyReport();
             }
         }
         while (choice != 0);
-    }
-
-    public void bayOccupancyReport() {
-        //TODO: Add code here
     }
 
     public void costOfOwnershipReport() {
