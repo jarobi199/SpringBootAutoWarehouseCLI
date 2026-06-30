@@ -116,11 +116,16 @@ public class ReportService {
     }
 
     public void bayOccupancyReport() {
+
         for(BayType bayType : BayType.values()) {
             List<Bay> bays =bayRepository.findByUserIdAndBayType(SessionContext.getUser().getId(), bayType);
             int totalBays = bays.size();
             int occupiedBays = bays.stream().filter(Bay::isOccupied).toList().size();
             int vacantBays = bays.stream().filter(bay -> !bay.isOccupied()).toList().size();
+            double bayOccupancyRate = (double) occupiedBays / totalBays * 100;
+
+            barChart.bar(bayType.name(), bayOccupancyRate);
+
             System.out.println("| " + bayType.name() + " BAY |");
             Table bayOccupancyTable = Clique.table(TableType.BOX_DRAW)
                     .headers(
@@ -132,7 +137,17 @@ public class ReportService {
             bayOccupancyTable.render();
             System.out.println();
         }
+
+        barChart.render();
     }
 
+    private void printBar(String label, double value, double maxValue, int labelWidth) {
+        int filled = (int) Math.round((value / maxValue) * maxWidth);
+        int empty = maxWidth - filled;
+        String bar = "█".repeat(filled) + "░".repeat(empty);
+        String formattedLabel = String.format("%-" + labelWidth + "s", label);
+        String formattedValue = String.format("$%,.2f", value);
+        System.out.println(formattedLabel + "  " + bar + "  " + formattedValue);
+    }
     //Occupancy count by bay type (STANDARD, OVERSIZED, etc.). Shows total bays, occupied bays, and vacant bays per type. Occupancy rate per type as a bar chart. Useful for facilities planning.
 }
