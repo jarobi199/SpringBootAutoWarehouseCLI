@@ -109,43 +109,12 @@ public class ReportService {
         Map<ServiceType,Double> maintenanceCostByTypeMap = maintenanceRecords.stream().collect(Collectors.groupingBy(
                 MaintenanceRecord::getServiceType,
                 Collectors.summingDouble(MaintenanceRecord::getCost)));
-    }
 
-  /*
-    class Item {
-        private String name;
-        private int quantity;
-
-        public Item(String name, int quantity) {
-            this.name = name;
-            this.quantity = quantity;
+        BarChartUtil.Builder builder =  BarChartUtil.builder().title("MAINTENANCE COSTS BY TYPE");
+        for (Map.Entry<ServiceType, Double> entry : maintenanceCostByTypeMap.entrySet()) {
+            builder.bar(entry.getKey().name(), entry.getValue());
         }
-
-        public String getName() { return name; }
-        public int getQuantity() { return quantity; }
+        builder.showTotal(true).render();
     }
-
-    public class Main {
-        public static void main(String[] args) {
-            // 1. Create a list of items with duplicate names
-            List<Item> items = Arrays.asList(
-                    new Item("Apple", 10),
-                    new Item("Banana", 20),
-                    new Item("Apple", 15),
-                    new Item("Orange", 5),
-                    new Item("Banana", 5)
-            );
-
-            // 2. Group by item name and sum the quantities
-            Map<String, Integer> totalByProduct = items.stream()
-                    .collect(Collectors.groupingBy(
-                            Item::getName,                             // Key extractor (Group By)
-                            Collectors.summingInt(Item::getQuantity)   // Downstream collector (Sum)
-                    ));
-
-            // 3. Print the resulting Map
-            System.out.println(totalByProduct);
-        }
-    }*/
 
 }
