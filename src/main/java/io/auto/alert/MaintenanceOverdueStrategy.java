@@ -1,6 +1,5 @@
 package io.auto.alert;
 
-import io.auto.bridge.SpringContext;
 import io.auto.enums.AlertType;
 import io.auto.interfaces.AlertStrategy;
 import io.auto.model.MaintenanceRecord;
