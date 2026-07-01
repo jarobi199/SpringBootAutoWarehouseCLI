@@ -15,7 +15,7 @@ public class InputHandler {
     // ----------------------------------------------------------------
     private static final boolean DEBUG = true;
     private static final String DEBUG_FILE = "C:\\Users\\jarob\\Documents\\Java\\Claude\\SpringBootAutoWarehouseCLI\\data\\test_input.txt";
-    private static final int DEBUG_DELAY_MS = 2000;
+    private static final int DEBUG_DELAY_MS = 1000;
 
     private static final Scanner consoleScanner = new Scanner(System.in);
     private static BufferedReader debugReader = null;

@@ -255,7 +255,6 @@ GASOLINE
 EXCELLENT
 Classic touring setup — engine rebuilt
 1923
-0
 
 --- TEST 34: Edit Sea Ray (vehicle 3) — update storage notes
 4
