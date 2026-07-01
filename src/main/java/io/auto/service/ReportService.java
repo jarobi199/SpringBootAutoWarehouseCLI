@@ -142,11 +142,11 @@ public class ReportService {
 
         System.out.println("| BAY OCCUPANCY RATES PER TYPE |");
         for (Map.Entry<BayType, Double> entry : occupancyRateChart.entrySet()) {
-            printBar(entry.getKey().name(), entry.getValue(),20);
+            printBar(entry.getKey().name(), entry.getValue());
         }
     }
 
-    private void printBar(String label, double value, int labelWidth) {
+    private void printBar(String label, double value) {
         // 1. Intercept NaN values and treat them as 0 (or return early)
         double safeValue = Double.isNaN(value) ? 0.0 : value;
 
@@ -158,8 +158,8 @@ public class ReportService {
         String bar = "█".repeat(filled) + "░".repeat(empty);
 
         // 4. Safe label trimming and sizing
-        String formattedLabel = String.format("%-" + Math.max(labelWidth, 0) + "s",
-                label.substring(0, Math.min(label.length(), labelWidth)));
+        String formattedLabel = String.format("%-" + Math.max(20, 0) + "s",
+                label.substring(0, Math.min(label.length(), 20)));
 
         // 5. Use the safe value to completely eliminate "NaN%" from the output
         String formattedValue = String.format("%6.2f%%", safeValue);

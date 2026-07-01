@@ -4,12 +4,12 @@
 # High value threshold: 1000
 # ============================================================
 
---- TEST 1: LOGIN
+--- TEST 1: Login
 kjackson
 password
 
 # ============================================================
-# TEST 1: BAYS — Add three bays
+# SECTION 1: BAYS — Add five bays
 # ============================================================
 
 --- TEST 2: Main → Bays
@@ -36,20 +36,37 @@ Oversized Row C
 OVERSIZED
 For large vehicles
 
---- TEST 6: List all bays (should show 3 vacant)
+--- TEST 6: Add Bay 4 (Outdoor Covered)
+3
+4
+Outdoor Section D
+OUTDOOR_COVERED
+Covered parking for overflow
+
+--- TEST 7: Add Bay 5 (Secure Vault)
+3
+5
+Secure Vault E
+SECURE_VAULT
+High security storage
+
+--- TEST 8: List all bays (should show 5 vacant)
 1
 
---- TEST 7: Back to Main
+--- TEST 9: List vacant bays (should also show all 5)
+2
+
+--- TEST 10: Back to Main
 0
 
 # ============================================================
-# TEST 2: VEHICLES — Add one of each type
+# SECTION 2: VEHICLES — Add one of each type
 # ============================================================
 
---- TEST 8: Main → Vehicles
+--- TEST 11: Main → Vehicles
 2
 
---- TEST 9: Add Passenger Vehicle (Bay 1 selected from vacant list)
+--- TEST 12: Add Passenger Vehicle — Ford F-150 (Bay 1)
 2
 1
 PASSENGER
@@ -67,7 +84,7 @@ GASOLINE
 4
 N
 
---- TEST 10: Add Motorcycle (Bay 2 selected from vacant list)
+--- TEST 13: Add Motorcycle — Harley Road King (Bay 2)
 2
 1
 MOTORCYCLE
@@ -84,7 +101,7 @@ Classic touring setup
 N
 12000
 
---- TEST 11: Add Recreational Vehicle (Bay 3 selected from vacant list)
+--- TEST 14: Add Recreational Vehicle — Sea Ray boat (Bay 3)
 2
 1
 RECREATIONAL
@@ -101,24 +118,50 @@ BOAT
 Needs trailer hitch on tow vehicle
 Y
 
---- TEST 12: List all vehicles (should show 3)
+--- TEST 15: Add second Passenger Vehicle — Toyota Camry (Bay 4)
+2
+1
+PASSENGER
+2019
+Toyota
+Camry
+4T1B11HK5KU123456
+27500
+2019-08-20
+2025-08-31
+GOOD
+Original owner, clean title
+61200
+GASOLINE
+5
+N
+
+--- TEST 16: List all vehicles (should show 4)
 1
 
---- TEST 13: View detail — select vehicle 1 (F-150)
+--- TEST 17: View detail — Passenger (F-150, vehicle 1)
 3
 1
 
---- TEST 14: Back to Main
+--- TEST 18: View detail — Motorcycle (Harley, vehicle 2)
+3
+2
+
+--- TEST 19: View detail — Recreational (Sea Ray, vehicle 3)
+3
+3
+
+--- TEST 20: Back to Main
 0
 
 # ============================================================
-# TEST 3: MAINTENANCE — Log two records on the F-150
+# SECTION 3: MAINTENANCE — Log records on multiple vehicles
 # ============================================================
 
---- TEST 15: Main → Maintenance
+--- TEST 21: Main → Maintenance
 3
 
---- TEST 16: Log record 1 — Oil change on F-150
+--- TEST 22: Log oil change on F-150 (vehicle 1)
 1
 1
 2023-04-10
@@ -128,7 +171,7 @@ Full synthetic oil change
 45000
 Mike Torres
 
---- TEST 17: Log record 2 — Tire service on F-150
+--- TEST 23: Log tire service on F-150 (vehicle 1)
 1
 1
 2024-01-20
@@ -138,96 +181,211 @@ Rotate and balance all four tires
 67000
 Mike Torres
 
---- TEST 18: View history by vehicle — F-150 (vehicle 1)
+--- TEST 24: Log brake service on F-150 (vehicle 1)
+1
+1
+2024-06-15
+BRAKE_SERVICE
+Front brake pads replaced
+210.00
+72000
+Mike Torres
+
+--- TEST 25: Log inspection on Harley (vehicle 2)
+1
+2
+2023-09-01
+INSPECTION
+Annual safety inspection
+75.00
+9500
+Sarah Kim
+
+--- TEST 26: Log detailing on Sea Ray (vehicle 3)
+1
+3
+2023-11-12
+DETAILING
+Full interior and hull detail
+320.00
+0
+Ray's Marine
+
+--- TEST 27: Log oil change on Camry (vehicle 4)
+1
+4
+2022-06-01
+OIL_CHANGE
+Conventional oil change
+49.99
+51000
+AutoZone Service
+
+--- TEST 28: View history by vehicle — F-150 (vehicle 1, should show 3 records)
 2
 1
 
---- TEST 19: Back to Main
+--- TEST 29: View history by vehicle — Sea Ray (vehicle 3, should show 1 record)
+2
+3
+
+--- TEST 30: Back to Main
 0
 
 # ============================================================
-# TEST 4: VEHICLES — Edit the F-150 (update odometer + reg date)
+# SECTION 4: VEHICLES — Edit vehicles
 # ============================================================
 
---- TEST 20: Main → Vehicles
+--- TEST 31: Main → Vehicles
 2
 
---- TEST 21: Edit vehicle 1 (F-150)
+--- TEST 32: Edit F-150 (vehicle 1) — update odometer and reg date
 4
 1
 2027-06-30
 GOOD
-Crew cab, tow package — updated
+Crew cab, tow package — updated odometer
 90000
 GASOLINE
 
---- TEST 22: Add seasonal record to the Sea Ray (vehicle 3)
+--- TEST 33: Edit Harley (vehicle 2) — update engine CC
+4
+2
+2027-03-31
+EXCELLENT
+Classic touring setup — engine rebuilt
+1923
+0
+
+--- TEST 34: Edit Sea Ray (vehicle 3) — update storage notes
+4
+3
+2027-05-31
+GOOD
+Store with cover on — winterized
+Updated storage notes for winter season
+
+--- TEST 35: Add seasonal record to Sea Ray (index 1 — only REC vehicle)
+6
+1
+Summer 2023
+42
+3
+First season on the water
+
+--- TEST 36: Add second seasonal record to Sea Ray
 6
 1
 Summer 2024
-42
+67
 3
-Stored on trailer in bay
+Stored at marina in off-season
 
---- TEST 23: View detail on Sea Ray — should show seasonal log
+--- TEST 37: View detail on Sea Ray — should show 2 seasonal logs
 3
 3
 
---- TEST 24: Back to Main
+--- TEST 38: Back to Main
 0
 
 # ============================================================
-# TEST 5: BAYS — View bay detail, edit a bay
+# SECTION 5: BAYS — View detail, edit
 # ============================================================
 
---- TEST 25: Main → Bays
+--- TEST 39: Main → Bays
 1
 
---- TEST 26: View detail of a vacant bay — Bay 4 (all current bays are occupied, so skip)
-# All three bays are occupied now — list all bays to confirm
+--- TEST 40: List all bays — confirm 4 occupied, 1 vacant (Bay 5)
 1
 
---- TEST 27: Back to Main
-0
-
-# ============================================================
-# TEST 6: ALERTS — Run all alert strategies
-# ============================================================
-
---- TEST 28: Main → Alerts
-5
-
---- TEST 29: View all alerts
-1
-
---- TEST 30: High value vehicle alerts only (F-150 at $42k > threshold $1000)
-4
-
---- TEST 31: Maintenance overdue alerts
-3
-
---- TEST 32: Registration expiry alerts
+--- TEST 41: List vacant bays — should show only Bay 5
 2
 
---- TEST 33: Back to Main
+--- TEST 42: View bay detail — Bay 5 (vacant, index 1 in vacant list)
+4
+1
+
+--- TEST 43: Edit Bay 5 — rename and change type
+5
+1
+Secure Vault E — Premium
+SECURE_VAULT
+Reserved for high value imports
+
+--- TEST 44: List all bays — confirm edit
+1
+
+--- TEST 45: Back to Main
 0
 
 # ============================================================
-# TEST 7: SETTINGS — Change password, update threshold
+# SECTION 6: ALERTS — All strategies
 # ============================================================
 
---- TEST 34: Main → Settings
+--- TEST 46: Main → Alerts
+5
+
+--- TEST 47: View all alerts (F-150 and Sea Ray reg expiry, Camry maintenance overdue, high value vehicles)
+1
+
+--- TEST 48: Registration expiry alerts only
+2
+
+--- TEST 49: Maintenance overdue alerts only (Camry last serviced 2022 — over 1 year ago)
+3
+
+--- TEST 50: High value vehicle alerts only (F-150 $42k, Sea Ray $38k both > $1000 threshold)
+4
+
+--- TEST 51: Back to Main
+0
+
+# ============================================================
+# SECTION 7: REPORTS — All five report types
+# ============================================================
+
+--- TEST 52: Main → Reports
+4
+
+--- TEST 53: Fleet summary (4 vehicles, 5 bays, 80% occupancy, bar chart by type)
+1
+
+--- TEST 54: Vehicle valuation report (all 4 vehicles sorted by purchase price desc)
+2
+
+--- TEST 55: Cost-of-ownership report — F-150 (vehicle 1, has 3 maintenance records)
+3
+1
+
+--- TEST 56: Cost-of-ownership report — Sea Ray (vehicle 3, 1 maintenance record)
+3
+3
+
+--- TEST 57: Maintenance cost by type (bar chart — OIL_CHANGE, TIRE, BRAKE, INSPECTION, DETAILING)
+4
+
+--- TEST 58: Bay occupancy report (per bay type — 1 STANDARD, 1 CLIMATE, 1 OVERSIZED, 1 OUTDOOR, 1 SECURE_VAULT)
+5
+
+--- TEST 59: Back to Main
+0
+
+# ============================================================
+# SECTION 8: SETTINGS — Password, threshold, user management
+# ============================================================
+
+--- TEST 60: Main → Settings
 6
 
---- TEST 35: Change password
+--- TEST 61: Change password
 1
 newpassword1
 
---- TEST 36: Set high value threshold to 50000
+--- TEST 62: Set high value threshold to 50000
 2
 50000
 
---- TEST 37: Add a new non-admin user
+--- TEST 63: Add a new non-admin user (jcarter)
 3
 James Carter
 jcarter
@@ -235,93 +393,165 @@ temppass123
 USER
 10000
 
---- TEST 38: Back to Main
+--- TEST 64: Add a second admin user (lsmith)
+3
+Laura Smith
+lsmith
+adminpass456
+ADMINISTRATOR
+25000
+
+--- TEST 65: Back to Main
 0
 
 # ============================================================
-# TEST 8: MAINTENANCE — Delete a record
+# SECTION 9: ALERTS — Re-run after threshold change
+# (F-150 $42k and Sea Ray $38k now below $50k threshold)
 # ============================================================
 
---- TEST 39: Main → Maintenance
+--- TEST 66: Main → Alerts
+5
+
+--- TEST 67: High value vehicle alerts — should now show fewer or none below $50k
+4
+
+--- TEST 68: Back to Main
+0
+
+# ============================================================
+# SECTION 10: MAINTENANCE — Delete a record
+# ============================================================
+
+--- TEST 69: Main → Maintenance
 3
 
---- TEST 40: Delete the tire service record (record 2) on F-150
+--- TEST 70: Delete tire service record on F-150 (vehicle 1, record 2)
 3
 1
 2
 Y
 
---- TEST 41: Confirm deletion — view history, should show only oil change
+--- TEST 71: Verify deletion — view history for F-150 (should show 2 records)
 2
 1
 
---- TEST 42: Back to Main
+--- TEST 72: Back to Main
 0
 
 # ============================================================
-# TEST 9: VEHICLES — Move F-150 to a new bay
+# SECTION 11: VEHICLES — Move F-150 to the vacant bay
 # ============================================================
 
---- TEST 43: Main → Bays — Add a fourth bay first
-1
-3
-4
-Secure Vault D
-SECURE_VAULT
-High value storage
-0
-
---- TEST 44: Main → Vehicles — Move F-150 from Bay 1 to Bay 4
+--- TEST 73: Main → Vehicles
 2
+
+--- TEST 74: Move F-150 (vehicle 1) to Bay 5 (index 1 — only vacant bay)
 5
 1
 1
 
---- TEST 45: List all vehicles to confirm bay change
+--- TEST 75: List all vehicles — confirm F-150 shows Bay 5 name
 1
 
---- TEST 46: Back to Main
+--- TEST 76: Back to Main
 0
 
 # ============================================================
-# TEST 10: VEHICLES — Delete the motorcycle
+# SECTION 12: REPORTS — Re-run after move to verify no regressions
 # ============================================================
 
---- TEST 47: Main → Vehicles
+--- TEST 77: Main → Reports
+4
+
+--- TEST 78: Bay occupancy report — all 5 bays now occupied
+5
+
+--- TEST 79: Fleet summary — occupancy rate should now be 100%
+1
+
+--- TEST 80: Back to Main
+0
+
+# ============================================================
+# SECTION 13: VEHICLES — Delete the Harley (vehicle 2)
+# ============================================================
+
+--- TEST 81: Main → Vehicles
 2
 
---- TEST 48: Delete vehicle 2 (Harley)
+--- TEST 82: Delete Harley (vehicle 2)
 7
 2
 Y
 
---- TEST 49: List all vehicles (should show 2 remaining)
+--- TEST 83: List all vehicles — should show 3 remaining
 1
 
---- TEST 50: Back to Main
+--- TEST 84: Back to Main
 0
 
 # ============================================================
-# TEST 11: BAYS — Delete a vacant bay (Bay 2, freed by Harley deletion)
+# SECTION 14: BAYS — Delete the now-vacant bay (Bay 2, freed by Harley)
 # ============================================================
 
---- TEST 51: Main → Bays
+--- TEST 85: Main → Bays
 1
 
---- TEST 52: Delete Bay 2 (now vacant)
+--- TEST 86: List all bays — Bay 2 should now be vacant
+1
+
+--- TEST 87: Delete Bay 2 (index 1 in vacant bay list)
 6
 1
 Y
 
---- TEST 53: List all bays
+--- TEST 88: List all bays — confirm Bay 2 deleted (4 bays remain)
 1
 
---- TEST 54: Back to Main
+--- TEST 89: Back to Main
+0
+
+# ============================================================
+# SECTION 15: REPORTS — Final fleet state after deletions
+# ============================================================
+
+--- TEST 90: Main → Reports
+4
+
+--- TEST 91: Vehicle valuation report — should show 3 vehicles
+2
+
+--- TEST 92: Maintenance cost by type — F-150 oil+brake, Camry oil, Sea Ray detailing
+4
+
+--- TEST 93: Cost-of-ownership report — Camry (vehicle 3 after Harley deleted, 1 maintenance record)
+3
+3
+
+--- TEST 94: Bay occupancy report — 3 of 4 bays occupied
+5
+
+--- TEST 95: Back to Main
+0
+
+# ============================================================
+# SECTION 16: SETTINGS — Delete the non-admin user
+# ============================================================
+
+--- TEST 96: Main → Settings
+6
+
+--- TEST 97: Delete user jcarter
+4
+jcarter
+Y
+
+--- TEST 98: Back to Main
 0
 
 # ============================================================
 # EXIT
 # ============================================================
 
---- TEST 55: Exit application
+--- TEST 99: Exit application
 0
