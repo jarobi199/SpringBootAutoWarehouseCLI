@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -116,6 +117,7 @@ public class ReportService {
     }
 
     public void bayOccupancyReport() {
+        Map<BayType, Double> occupancyRateChart = new HashMap<>();
 
         for(BayType bayType : BayType.values()) {
             List<Bay> bays =bayRepository.findByUserIdAndBayType(SessionContext.getUser().getId(), bayType);
@@ -124,7 +126,7 @@ public class ReportService {
             int vacantBays = bays.stream().filter(bay -> !bay.isOccupied()).toList().size();
             double bayOccupancyRate = (double) occupiedBays / totalBays * 100;
 
-            barChart.bar(bayType.name(), bayOccupancyRate);
+            occupancyRateChart.put(bayType, bayOccupancyRate);
 
             System.out.println("| " + bayType.name() + " BAY |");
             Table bayOccupancyTable = Clique.table(TableType.BOX_DRAW)
@@ -138,16 +140,33 @@ public class ReportService {
             System.out.println();
         }
 
-        barChart.render();
+        System.out.println("| BAY OCCUPANCY RATES PER TYPE |");
+        for (Map.Entry<BayType, Double> entry : occupancyRateChart.entrySet()) {
+            printBar(entry.getKey().name(), entry.getValue(),20);
+        }
     }
 
-    private void printBar(String label, double value, double maxValue, int labelWidth) {
-        int filled = (int) Math.round((value / maxValue) * maxWidth);
-        int empty = maxWidth - filled;
+    private void printBar(String label, double value, int labelWidth) {
+        // 1. Intercept NaN values and treat them as 0 (or return early)
+        double safeValue = Double.isNaN(value) ? 0.0 : value;
+
+        // 2. Cap filled at 40 using the safe value
+        int filled = Math.min((int) Math.round((safeValue / 100) * 40), 40);
+        int empty = 40 - filled;
+
+        // 3. Repeat blocks safely
         String bar = "█".repeat(filled) + "░".repeat(empty);
-        String formattedLabel = String.format("%-" + labelWidth + "s", label);
-        String formattedValue = String.format("$%,.2f", value);
-        System.out.println(formattedLabel + "  " + bar + "  " + formattedValue);
+
+        // 4. Safe label trimming and sizing
+        String formattedLabel = String.format("%-" + Math.max(labelWidth, 0) + "s",
+                label.substring(0, Math.min(label.length(), labelWidth)));
+
+        // 5. Use the safe value to completely eliminate "NaN%" from the output
+        String formattedValue = String.format("%6.2f%%", safeValue);
+
+        System.out.println(formattedLabel + " " + bar + " " + formattedValue);
     }
+
+
     //Occupancy count by bay type (STANDARD, OVERSIZED, etc.). Shows total bays, occupied bays, and vacant bays per type. Occupancy rate per type as a bar chart. Useful for facilities planning.
 }
